@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vegetable Stock Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="login-screen" class="login-overlay">
+        <div class="login-box">
+            <h2><i class="fa-solid fa-leaf" style="color: #48bb78;"></i> VeggieStock <span
+                    style="font-weight:300">Login</span></h2>
+            <input type="text" id="login-username" placeholder="Username">
+            <input type="password" id="login-password" placeholder="Password">
+            <button id="login-btn" class="theme-btn">Login</button>
+            <p id="login-error" class="error-msg"></p>
+        </div>
+    </div>
+
+    <div class="container" id="main-app" style="display:none;">
+        <div class="overlay" id="sidebar-overlay"></div>
+
+        <nav class="sidebar" id="sidebar">
+            <div class="profile-section">
+                <img src="https://ui-avatars.com/api/?name=User&background=4e73df&color=fff" alt="Profile"
+                    class="profile-img-circle" id="profile-img">
+                <h3 id="profile-name">User</h3>
+                <p class="role" id="profile-role">Access Level</p>
+            </div>
+
+            <ul class="nav-links">
+                <li data-target="dashboard" class="active" id="nav-dashboard"><a href="#"><i
+                            class="fa-solid fa-house"></i> Home</a></li>
+                <li data-target="stocks" id="nav-stocks"><a href="#"><i class="fa-solid fa-carrot"></i> Stocks</a></li>
+                <li data-target="users" id="nav-users"><a href="#"><i class="fa-solid fa-users"></i> Users</a></li>
+            </ul>
+
+            <div class="logout-section">
+                <a href="#" id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Log out</a>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <header>
+                <div class="header-left">
+                    <button class="sidebar-toggle-btn" id="sidebar-toggle"><i class="fa-solid fa-bars"></i></button>
+                    <div>
+                        <h2 id="page-title">Analytics Overview</h2>
+                        <p class="date-display" id="date-display">Welcome</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button id="theme-toggle" class="theme-btn">
+                        <i class="fa-solid fa-moon"></i> <span id="theme-text">Dark Mode</span>
+                    </button>
+                </div>
+            </header>
+
+            <section id="dashboard-section" class="view-section">
+                <div class="hero-banner">
+                    <h1>Market Insights</h1>
+                    <p>Real-time stock value and system alerts.</p>
+                </div>
+                <div class="cards-grid" id="cards-container"></div>
+            </section>
+
+            <section id="stocks-section" class="view-section" style="display:none;">
+                <div class="hero-banner" style="background: linear-gradient(135deg, #f6ad55, #ed8936);">
+                    <h1>Inventory Management</h1>
+                    <p>Update vegetable prices and quantities.</p>
+                </div>
+                <div class="card">
+                    <h3>Add/Update Stock</h3>
+                    <div class="form-group" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+                        <input type="text" id="veg-name" placeholder="Item Name (e.g. Potato)">
+                        <input type="number" id="veg-qty" placeholder="Qty (kg)">
+                        <input type="number" id="veg-price" placeholder="Price/kg">
+                        <button id="add-stock-btn" class="theme-btn"
+                            style="background: #ed8936; color: white; border: none;">Save Item</button>
+                    </div>
+                </div>
+                <div class="card table-card" style="margin-top: 20px;">
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th>Vegetable</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total Value</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stock-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="users-section" class="view-section" style="display:none;">
+                <div class="hero-banner" style="background: linear-gradient(135deg, #1cc88a, #13855c);">
+                    <h1>System Access</h1>
+                    <p>Manage administrative and staff accounts.</p>
+                </div>
+                <div class="card">
+                    <h3>Create Account</h3>
+                    <div class="form-group">
+                        <input type="text" id="new-username" placeholder="Username">
+                        <input type="password" id="new-password" placeholder="Password">
+                        <select id="new-role">
+                            <option value="User">Staff/User</option>
+                            <option value="Admin">Administrator</option>
+                        </select>
+                        <button id="add-user-btn" class="theme-btn">Add User</button>
+                    </div>
+                </div>
+                <div class="card table-card" style="margin-top: 20px;">
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script type="module" src="script.js"></script>
+</body>
+
+</html>

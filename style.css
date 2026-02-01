@@ -1,0 +1,511 @@
+/* =========================================
+   1. VARIABLES & THEME SETUP
+   ========================================= */
+:root {
+    --primary-color: #4e73df;
+    --bg-color: #f3f4f6;
+    --sidebar-bg: #ffffff;
+    --text-color: #333333;
+    --text-muted: #888888;
+    --card-bg: #ffffff;
+    --border-color: #e5e7eb;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    --sidebar-width: 260px;
+}
+
+/* Dark Mode Variables */
+body.dark-mode {
+    --primary-color: #3b82f6;
+    --bg-color: #111827;
+    --sidebar-bg: #1f2937;
+    --text-color: #f3f4f6;
+    --text-muted: #9ca3af;
+    --card-bg: #1f2937;
+    --border-color: #374151;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* =========================================
+   2. GLOBAL RESETS & TYPOGRAPHY
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow-x: hidden;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* =========================================
+   3. SIDEBAR STYLING
+   ========================================= */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    position: fixed;
+    height: 100%;
+    z-index: 100;
+    transition: transform 0.3s ease-in-out;
+}
+
+.profile-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.profile-img-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border: 3px solid var(--primary-color);
+}
+
+.role {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.nav-links {
+    list-style: none;
+    flex-grow: 1;
+}
+
+.nav-links li {
+    margin-bottom: 10px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.nav-links a i {
+    margin-right: 15px;
+    width: 20px;
+}
+
+/* Active State */
+.nav-links li.active a,
+.nav-links a:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.logout-section a {
+    text-decoration: none;
+    color: #ef4444;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* =========================================
+   4. MAIN CONTENT & HEADER
+   ========================================= */
+.main-content {
+    margin-left: var(--sidebar-width);
+    flex-grow: 1;
+    padding: 30px;
+    width: calc(100% - var(--sidebar-width));
+    transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Mobile Sidebar Toggle Button (Hidden on Desktop) */
+.sidebar-toggle-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.theme-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.notification-icon {
+    position: relative;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ef4444;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 5px;
+    border-radius: 50%;
+}
+
+/* =========================================
+   5. DASHBOARD PANEL
+   ========================================= */
+.hero-banner {
+    background: linear-gradient(135deg, var(--primary-color), #6366f1);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-icon {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.card h3 {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.card .value {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* =========================================
+   6. LOGIN SCREEN & FORMS
+   ========================================= */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+
+    /* NEW: High Definition Vegetable Background */
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)),
+        url('https://images.unsplash.com/photo-1590779033100-9f60a05a013d?q=80&w=2574&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.login-box {
+    /* Make background slightly transparent white to blend with image */
+    background: rgba(255, 255, 255, 0.92);
+
+    /* Add a green accent border on top to suit the veg theme */
+    border-top: 5px solid var(--primary-color);
+
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+    width: 400px;
+
+    /* Deep shadow to make it pop off the dark background */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+    /* Smooth transition for hover effect */
+    transition: all 0.3s ease;
+}
+
+/* INTERACTIVE HOVER EFFECT */
+.login-box:hover {
+    /* Slight lift up */
+    transform: translateY(-5px);
+    /* Shadow gets deeper, making it feel 3D */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* 1. THE HEADER: Modern & Thematic */
+.login-box h2 {
+    color: #2d3748;
+    /* Dark gray for contrast */
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+}
+
+/* 2. THE INPUTS: Glassy & Interactive */
+.login-box input {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 10px 0;
+
+    /* Subtle transparent background */
+    background: #f7fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+
+    font-size: 1rem;
+    color: #4a5568;
+
+    /* Smooth transition for the 'glow' effect */
+    transition: all 0.3s ease;
+}
+
+/* Dynamic Focus Effect: Glows Green when clicked */
+.login-box input:focus {
+    outline: none;
+    border-color: #48bb78;
+    /* Fresh Green */
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.2);
+    /* Soft green glow ring */
+    transform: scale(1.02);
+    /* Slight zoom for emphasis */
+}
+
+/* 3. THE BUTTON: Vibrant Gradient */
+#login-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+
+    /* Green Gradient to match vegetables */
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    color: white;
+
+    border: none;
+    border-radius: 25px;
+    /* Pill shape */
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+
+    /* Shadow for depth */
+    box-shadow: 0 4px 6px rgba(56, 161, 105, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* Dynamic Hover Effect for Button */
+#login-btn:hover {
+    transform: translateY(-2px);
+    /* Lifts up */
+    box-shadow: 0 6px 12px rgba(56, 161, 105, 0.4);
+    /* Shadow grows */
+    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+    /* Gets slightly darker */
+}
+
+.error-msg {
+    color: #ef4444;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+/* =========================================
+   7. USER MANAGEMENT TABLE
+   ========================================= */
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.user-table th,
+.user-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.user-table th {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.delete-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.badge-role {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.role-admin {
+    background: #e0e7ff;
+    color: #4e73df;
+}
+
+.role-user {
+    background: #d1fae5;
+    color: #10b981;
+}
+
+/* =========================================
+   8. RESPONSIVE DESIGN (MOBILE)
+   ========================================= */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        /* Hide sidebar by default */
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+        /* Show sidebar when active */
+    }
+
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .sidebar-toggle-btn {
+        display: block;
+        /* Show hamburger menu */
+    }
+
+    .header-left h2 {
+        font-size: 1.2rem;
+    }
+
+    .date-display {
+        display: none;
+        /* Hide date on very small screens to save space */
+    }
+
+    /* Overlay when sidebar is open */
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 90;
+    }
+
+    .overlay.active {
+        display: block;
+    }
+}
+
+/* =========================================
+   9. DYNAMIC USER THEMES
+   ========================================= */
+
+/* Default Admin Theme is Blue (Already set in :root) */
+
+/* User Theme - Overrides Blue with Green */
+body.theme-user {
+    --primary-color: #10b981;
+    /* Emerald Green */
+}
+
+/* Specific overrides for User Theme Sidebar */
+body.theme-user .sidebar {
+    background: #f0fdf4;
+    /* Very light green tint */
+    border-right: 1px solid #bbf7d0;
+}
+
+body.theme-user .nav-links li.active a {
+    background-color: #10b981;
+    /* Green Active Link */
+    box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);
+}
+
+body.theme-user .hero-banner {
+    /* User Dashboard Header - Lush Green Gradient */
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+/* User Theme Dark Mode Adjustments */
+body.theme-user.dark-mode {
+    --primary-color: #34d399;
+    /* Lighter Green for Dark Mode */
+}
+
+body.theme-user.dark-mode .sidebar {
+    background: #064e3b;
+    /* Dark Green sidebar */
+    border-right: 1px solid #065f46;
+}
