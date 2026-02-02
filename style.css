@@ -11,6 +11,7 @@
     --border-color: #e5e7eb;
     --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     --sidebar-width: 260px;
+    --border-radius: 12px;
 }
 
 /* Dark Mode Variables */
@@ -201,7 +202,7 @@ header {
     color: white;
     padding: 30px;
     border-radius: 15px;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .cards-grid {
@@ -250,7 +251,7 @@ header {
     width: 100%;
     height: 100vh;
 
-    /* NEW: High Definition Vegetable Background */
+    /* High Definition Vegetable Background */
     background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)),
         url('https://images.unsplash.com/photo-1590779033100-9f60a05a013d?q=80&w=2574&auto=format&fit=crop');
     background-size: cover;
@@ -284,16 +285,13 @@ header {
 
 /* INTERACTIVE HOVER EFFECT */
 .login-box:hover {
-    /* Slight lift up */
     transform: translateY(-5px);
-    /* Shadow gets deeper, making it feel 3D */
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
 }
 
-/* 1. THE HEADER: Modern & Thematic */
+/* 1. THE HEADER */
 .login-box h2 {
     color: #2d3748;
-    /* Dark gray for contrast */
     margin-bottom: 1.5rem;
     font-size: 1.8rem;
     font-weight: 700;
@@ -301,67 +299,49 @@ header {
     text-transform: uppercase;
 }
 
-/* 2. THE INPUTS: Glassy & Interactive */
+/* 2. THE INPUTS */
 .login-box input {
     width: 100%;
     padding: 12px 15px;
     margin: 10px 0;
-
-    /* Subtle transparent background */
     background: #f7fafc;
     border: 2px solid #e2e8f0;
     border-radius: 8px;
-
     font-size: 1rem;
     color: #4a5568;
-
-    /* Smooth transition for the 'glow' effect */
     transition: all 0.3s ease;
 }
 
-/* Dynamic Focus Effect: Glows Green when clicked */
+/* Dynamic Focus Effect */
 .login-box input:focus {
     outline: none;
     border-color: #48bb78;
-    /* Fresh Green */
     background: #ffffff;
     box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.2);
-    /* Soft green glow ring */
     transform: scale(1.02);
-    /* Slight zoom for emphasis */
 }
 
-/* 3. THE BUTTON: Vibrant Gradient */
+/* 3. THE BUTTON */
 #login-btn {
     width: 100%;
     padding: 12px;
     margin-top: 10px;
-
-    /* Green Gradient to match vegetables */
     background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
     color: white;
-
     border: none;
     border-radius: 25px;
-    /* Pill shape */
     font-weight: 600;
     font-size: 1rem;
     letter-spacing: 0.5px;
     cursor: pointer;
-
-    /* Shadow for depth */
     box-shadow: 0 4px 6px rgba(56, 161, 105, 0.3);
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
-/* Dynamic Hover Effect for Button */
 #login-btn:hover {
     transform: translateY(-2px);
-    /* Lifts up */
     box-shadow: 0 6px 12px rgba(56, 161, 105, 0.4);
-    /* Shadow grows */
     background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
-    /* Gets slightly darker */
 }
 
 .error-msg {
@@ -423,23 +403,21 @@ header {
 @media (max-width: 768px) {
     .sidebar {
         transform: translateX(-100%);
-        /* Hide sidebar by default */
         box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
     }
 
     .sidebar.active {
         transform: translateX(0);
-        /* Show sidebar when active */
     }
 
     .main-content {
         margin-left: 0;
         width: 100%;
+        padding: 15px;
     }
 
     .sidebar-toggle-btn {
         display: block;
-        /* Show hamburger menu */
     }
 
     .header-left h2 {
@@ -448,7 +426,6 @@ header {
 
     .date-display {
         display: none;
-        /* Hide date on very small screens to save space */
     }
 
     /* Overlay when sidebar is open */
@@ -465,6 +442,25 @@ header {
 
     .overlay.active {
         display: block;
+    }
+
+    /* Make Table Scrollable horizontally */
+    .table-card {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .user-table {
+        min-width: 600px;
+    }
+
+    /* Adjust Hero Banners for smaller text */
+    .hero-banner h1 {
+        font-size: 1.5rem;
+    }
+
+    .hero-banner p {
+        font-size: 0.9rem;
     }
 }
 
@@ -483,52 +479,283 @@ body.theme-user {
 /* Specific overrides for User Theme Sidebar */
 body.theme-user .sidebar {
     background: #f0fdf4;
-    /* Very light green tint */
     border-right: 1px solid #bbf7d0;
 }
 
 body.theme-user .nav-links li.active a {
     background-color: #10b981;
-    /* Green Active Link */
     box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);
 }
 
 body.theme-user .hero-banner {
-    /* User Dashboard Header - Lush Green Gradient */
     background: linear-gradient(135deg, #10b981, #059669);
 }
 
 /* User Theme Dark Mode Adjustments */
 body.theme-user.dark-mode {
     --primary-color: #34d399;
-    /* Lighter Green for Dark Mode */
 }
 
 body.theme-user.dark-mode .sidebar {
     background: #064e3b;
-    /* Dark Green sidebar */
     border-right: 1px solid #065f46;
 }
 
 /* =========================================
-   10. NEW STOCK STATUS GRAPH
+   10. STOCK STATUS GRAPH & FORMS
    ========================================= */
-.stock-graph-container {
-    width: 100px;
-    /* Fixed width to keep table alignment perfect */
-    height: 8px;
-    /* Thickness of the bar */
+/* Container for the stock gauge */
+.stock-gauge-container {
+    width: 100%;
+    max-width: 120px;
     background-color: #e5e7eb;
-    /* Light grey background for the empty part */
-    border-radius: 4px;
+    border-radius: 10px;
+    height: 8px;
+    position: relative;
     overflow: hidden;
-    display: inline-block;
-    /* Keeps it inline like text */
-    vertical-align: middle;
+    margin-bottom: 4px;
 }
 
-.stock-graph-fill {
+/* The actual colored bar */
+.stock-gauge-bar {
     height: 100%;
-    border-radius: 4px;
-    transition: width 0.3s ease, background-color 0.3s ease;
+    border-radius: 10px;
+    transition: width 0.4s ease-out, background-color 0.3s ease;
+}
+
+/* Text label below the bar */
+.stock-gauge-text {
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Add Stock form alignment */
+#stocks-section .card .form-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+    align-items: center;
+}
+
+/* Ensure inputs stay within their container */
+#stocks-section .card input,
+#stocks-section .card select {
+    flex: 1;
+    min-width: 150px;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+/* Aligning text to consistent margins */
+.view-section {
+    padding: 10px 5px;
+}
+
+@media (max-width: 768px) {
+    .stock-gauge-container {
+        max-width: 80px;
+    }
+}
+
+/* Extra Small Screens (Phones) */
+@media (max-width: 480px) {
+    #stocks-section .card .form-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #stocks-section .card input {
+        width: 100%;
+    }
+}
+
+/* =========================================
+   11. SEARCH CONTAINER & MOBILE FIXES
+   ========================================= */
+
+/* Improved Search Container (Desktop & Base) */
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 12px;
+    background: var(--bg-color);
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.search-container:focus-within {
+    box-shadow: 0 0 0 2px rgba(78, 115, 223, 0.2);
+    border-color: var(--primary-color);
+}
+
+.search-container input {
+    border: none;
+    background: transparent;
+    outline: none;
+    color: var(--text-color);
+    width: 100%;
+}
+
+/* MOBILE CSS FIX: Force Stacked Layout for Filters/Search */
+@media (max-width: 768px) {
+
+    /* Target flex containers inside cards to force vertical stacking */
+    .card div[style*="display: flex"] {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 15px !important;
+    }
+
+    /* Make search and select dropdowns full width */
+    .search-container,
+    .card select {
+        width: 100% !important;
+        margin-bottom: 10px;
+    }
+}
+
+/* --- USER DETAILS MODAL --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: var(--card-bg);
+    width: 90%;
+    max-width: 600px;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    padding: 20px;
+    background: var(--primary-color);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.modal-body {
+    padding: 25px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+/* Analytics Row Styles */
+.analytics-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+.info-box {
+    background: var(--bg-color);
+    padding: 10px 15px;
+    border-radius: 8px;
+    flex: 1;
+}
+
+.info-box label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.info-box p {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Form Grid */
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.form-group.full-width {
+    grid-column: span 2;
+}
+
+.details-grid label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.details-grid input,
+.details-grid select,
+.details-grid textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-color);
+    color: var(--text-color);
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+.modal-footer {
+    padding: 20px;
+    border-top: 1px solid var(--border-color);
+    text-align: right;
+    background: var(--bg-color);
+}
+
+/* Clickable Username in Table */
+.user-link {
+    color: var(--primary-color);
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.user-link:hover {
+    color: #3b82f6;
 }
