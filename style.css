@@ -509,3 +509,26 @@ body.theme-user.dark-mode .sidebar {
     /* Dark Green sidebar */
     border-right: 1px solid #065f46;
 }
+
+/* =========================================
+   10. NEW STOCK STATUS GRAPH
+   ========================================= */
+.stock-graph-container {
+    width: 100px;
+    /* Fixed width to keep table alignment perfect */
+    height: 8px;
+    /* Thickness of the bar */
+    background-color: #e5e7eb;
+    /* Light grey background for the empty part */
+    border-radius: 4px;
+    overflow: hidden;
+    display: inline-block;
+    /* Keeps it inline like text */
+    vertical-align: middle;
+}
+
+.stock-graph-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}

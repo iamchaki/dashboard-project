@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- STATE MANAGEMENT ---
     let currentUser = null;
+    let editingStockId = null; // Track which item is being edited
 
     // --- DOM ELEMENTS ---
     const loginScreen = document.getElementById('login-screen');
@@ -139,24 +140,63 @@ document.addEventListener('DOMContentLoaded', () => {
             const tableBody = document.getElementById('stock-table-body');
             if (tableBody) tableBody.innerHTML = '';
 
-            snapshot.forEach((doc) => {
-                const item = doc.data();
-                globalStockData.push(item);
+            snapshot.forEach((docSnap) => {
+                const item = docSnap.data();
+                const docId = docSnap.id; // Get the Firestore ID
+
+                // Store ID in global data for easier retrieval later
+                globalStockData.push({ ...item, id: docId });
+
+                // --- UPDATED VISUAL LOGIC STARTS HERE ---
+
+                // 1. Define what counts as "Full Stock" (e.g., 50kg)
+                const maxStock = 50;
+
+                // 2. Calculate percentage (capped at 100%)
+                const percentage = Math.min((item.qty / maxStock) * 100, 100);
+
+                // 3. Dynamic Color: 0 is Red (Hue 0), 120 is Green (Hue 120)
+                // If qty is 0 -> Red. If qty is max -> Green.
+                const hue = (percentage * 1.2).toFixed(0);
+                const color = `hsl(${hue}, 85%, 45%)`;
+
+                // 4. Create the HTML for the graph
+                // Note: Inline styles added to ensure visibility if CSS isn't present
+                const status = `
+                    <div class="stock-graph-container" title="${item.qty} kg in stock" style="width: 100%; min-width: 80px; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
+                        <div class="stock-graph-fill" style="width: ${percentage}%; height: 100%; background-color: ${color}; transition: width 0.3s ease;"></div>
+                    </div>
+                `;
+                // --- UPDATED VISUAL LOGIC ENDS HERE ---
 
                 // Render Table Row
-                const status = item.qty < 10
-                    ? '<span class="badge-role" style="background:#fed7d7; color:#c53030;">Low Stock</span>'
-                    : '<span class="badge-role" style="background:#d1fae5; color:#10b981;">Available</span>';
-
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${item.name}</td>
                     <td>${item.qty} kg</td>
                     <td>₹${item.price}</td>
-                    <td>₹${item.qty * item.price}</td>
+                    <td>₹${(item.qty * item.price).toLocaleString()}</td>
                     <td>${status}</td>
+                    <td>
+                        ${currentUser.role === 'Admin' ? `
+                            <button class="edit-stock-btn" data-id="${docId}" style="background:#4e73df; color:white; border:none; padding:5px 8px; border-radius:4px; cursor:pointer; margin-right:5px;">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button class="delete-stock-btn" data-id="${docId}" style="background:#ef4444; color:white; border:none; padding:5px 8px; border-radius:4px; cursor:pointer;">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        ` : '<span style="color:#888; font-size:0.8rem;">View Only</span>'}
+                    </td>
                 `;
                 if (tableBody) tableBody.appendChild(tr);
+            });
+
+            // Re-attach listeners for Stock Actions (Edit/Delete)
+            document.querySelectorAll('.delete-stock-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => deleteStock(e.target.closest('button').dataset.id));
+            });
+            document.querySelectorAll('.edit-stock-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => prepareEditStock(e.target.closest('button').dataset.id));
             });
 
             // Trigger Dashboard Update
@@ -182,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>Active</td>
                     <td>
                         ${user.email !== currentUser.email ?
-                        `<button class="delete-btn" data-id="${docId}"><i class="fa-solid fa-trash"></i></button>`
+                        `<button class="delete-user-btn" data-id="${docId}"><i class="fa-solid fa-trash"></i></button>`
                         : '<span style="color:#ccc; font-size:0.8rem;">Current</span>'}
                     </td>
                 `;
@@ -190,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Re-attach delete listeners
-            document.querySelectorAll('.delete-btn').forEach(btn => {
+            document.querySelectorAll('.delete-user-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => deleteUser(e.target.closest('button').dataset.id));
             });
 
@@ -298,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 3. NAVIGATION & VIEW SWITCHING (UPDATED) ---
+    // --- 3. NAVIGATION & VIEW SWITCHING ---
     function switchView(viewName) {
         // 1. Hide all views
         views.forEach(view => view.style.display = 'none');
@@ -316,15 +356,12 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('stocks-section').style.display = 'block';
             document.getElementById('page-title').innerText = 'Stock Inventory';
 
-            // --- FIX START: Clear inputs to prevent duplicates ---
-            const nameInput = document.getElementById('veg-name');
-            const qtyInput = document.getElementById('veg-qty');
-            const priceInput = document.getElementById('veg-price');
-
-            if (nameInput) nameInput.value = '';
-            if (qtyInput) qtyInput.value = '';
-            if (priceInput) priceInput.value = '';
-            // --- FIX END ---
+            // Clear inputs if not editing
+            if (!editingStockId) {
+                document.getElementById('veg-name').value = '';
+                document.getElementById('veg-qty').value = '';
+                document.getElementById('veg-price').value = '';
+            }
         }
     }
 
@@ -391,16 +428,47 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Delete User (Only from Database List)
-    window.deleteUser = async function (id) {
+    async function deleteUser(id) {
         if (!confirm('Are you sure you want to remove this user from the list? (Note: This does not block their login yet, you must disable them in Firebase Console for full security)')) return;
         try {
             await deleteDoc(doc(db, "users", id));
         } catch (e) {
             alert("Error deleting: " + e.message);
         }
-    };
+    }
 
-    // --- 5. STOCK MANAGEMENT (Add Stock Logic) ---
+    // --- 5. STOCK MANAGEMENT (Add & Edit Logic) ---
+
+    // DELETE STOCK
+    async function deleteStock(id) {
+        if (!confirm('Are you sure you want to delete this item?')) return;
+        try {
+            await deleteDoc(doc(db, "stocks", id));
+        } catch (e) {
+            alert("Error deleting stock: " + e.message);
+        }
+    }
+
+    // PREPARE EDIT (Fill form with existing data)
+    function prepareEditStock(id) {
+        const item = globalStockData.find(s => s.id === id);
+        if (!item) return;
+
+        // Fill the inputs
+        document.getElementById('veg-name').value = item.name;
+        document.getElementById('veg-qty').value = item.qty;
+        document.getElementById('veg-price').value = item.price;
+
+        // Change button text and store ID
+        const saveBtn = document.getElementById('add-stock-btn');
+        saveBtn.innerText = "Update Item";
+        saveBtn.style.background = "#4e73df"; // Change color to indicate edit mode
+        editingStockId = id;
+
+        // Scroll to form (optional UX improvement)
+        document.getElementById('veg-name').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
     const addStockBtn = document.getElementById('add-stock-btn');
     if (addStockBtn) {
         addStockBtn.addEventListener('click', async () => {
@@ -410,21 +478,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (name && !isNaN(qty) && !isNaN(price)) {
                 try {
-                    await addDoc(collection(db, "stocks"), {
-                        name: name,
-                        qty: qty,
-                        price: price
-                    });
-                    alert("Stock added to Cloud!");
+                    if (editingStockId) {
+                        // --- UPDATE EXISTING STOCK ---
+                        await updateDoc(doc(db, "stocks", editingStockId), {
+                            name: name,
+                            qty: qty,
+                            price: price
+                        });
 
-                    // Optional: Clear fields immediately after successful add as well
+                        // Reset Mode
+                        editingStockId = null;
+                        addStockBtn.innerText = "Save Item";
+                        addStockBtn.style.background = "#ed8936"; // Reset to original orange/theme color
+                        alert("Stock updated successfully!");
+                    } else {
+                        // --- ADD NEW STOCK ---
+                        await addDoc(collection(db, "stocks"), {
+                            name: name,
+                            qty: qty,
+                            price: price
+                        });
+                        alert("Stock added to Cloud!");
+                    }
+
+                    // Clear fields
                     document.getElementById('veg-name').value = '';
                     document.getElementById('veg-qty').value = '';
                     document.getElementById('veg-price').value = '';
 
                 } catch (e) {
-                    alert("Error adding stock: " + e.message);
+                    alert("Error saving stock: " + e.message);
                 }
+            } else {
+                alert("Please fill in all fields correctly.");
             }
         });
     }
